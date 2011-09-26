@@ -11,7 +11,8 @@ setup(
     description = "Tracking dirty fields on a Django model instance",
     long_description = open('README.rst','r').read(),
     author = 'Simon de Haan',
-    packages = find_packages('src'),
+    packages = find_packages(),
+    setup_requires = ["setuptools_git >= 0.3",],
 #    package_dir = {'': 'src'},
 #    install_requires = listify('requirements.pip'),
 #    classifiers = listify('CLASSIFIERS.txt')
