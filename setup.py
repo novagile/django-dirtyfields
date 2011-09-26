@@ -14,7 +14,7 @@ setup(
     packages = find_packages(),
     setup_requires = ["setuptools_git >= 0.3",],
 #    package_dir = {'': 'src'},
-#    install_requires = listify('requirements.pip'),
+    install_requires = listify('requirements.pip'),
 #    classifiers = listify('CLASSIFIERS.txt')
 )
 
