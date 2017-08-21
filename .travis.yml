@@ -1,0 +1,41 @@
+language: python
+
+python:
+  - 2.7
+  - 3.5
+
+env:
+  - TOXENV=django18
+  - TOXENV=django19
+  - TOXENV=django110
+  - TOXENV=coverage
+  - TOXENV=postgresql
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.4"
+
+before_script:
+  - psql -c 'create database dirtyfields_test;' -U postgres
+
+script:
+  - tox
+
+install:
+  - pip install tox
+  - pip install coveralls
+  - pip install -e .
+
+after_success:
+  - if test "$TOXENV" = "coverage"; then coveralls; fi
+
+deploy:
+  provider: pypi
+  user: smn
+  password:
+    secure: "sXlDQNG8p+F4y8TKbRVw44uBCzECecgWQLNYcJBObMPoPbp64Ux488kM5RhbYhof0H1W850CKZzW66GQAjay0HS8tp9nPXg35xInPongLFuPzapoOdHtJZa5ub9QnpIs6LifJ/zXP5YDqh8ZUyoD+oFMvMFKjBkVB/NIYMYkyEM="
+  on:
+    tags: true
+    all_branches: true

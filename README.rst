@@ -1,30 +1,38 @@
+===================
 Django Dirty Fields
 ===================
 
+.. image:: https://badges.gitter.im/Join%20Chat.svg
+   :alt: Join the chat at https://gitter.im/romgar/django-dirtyfields
+   :target: https://gitter.im/romgar/django-dirtyfields?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+.. image:: https://travis-ci.org/romgar/django-dirtyfields.svg?branch=develop
+    :target: https://travis-ci.org/romgar/django-dirtyfields?branch=develop
+.. image:: https://coveralls.io/repos/romgar/django-dirtyfields/badge.svg?branch=develop
+   :target: https://coveralls.io/r/romgar/django-dirtyfields?branch=develop
+.. image:: http://readthedocs.org/projects/django-dirtyfields/badge/?version=develop
+   :target: http://django-dirtyfields.readthedocs.org/en/develop/?badge=develop
+
 Tracking dirty fields on a Django model instance.
+Dirty means that field in-memory and database values are different.
+
+This package is compatible and tested with latest versions of Django (1.8, 1.9, 1.10, 1.11 series).
+
+`Full documentation <http://django-dirtyfields.readthedocs.org/en/develop/>`_
+
+Install
+=======
 
 ::
 
     $ pip install django-dirtyfields
 
-or if you're interested in developing it
 
-::
+Usage
+=====
 
-    $ virtualenv --no-site-packages ve/
-    $ source ve/bin/activate
-    (ve)$ pip install -r requirements.pip
-    (ve)$ python setup.py develop
-    (ve)$ cd example_app && ./manage.py test testing_app
+To use ``django-dirtyfields``, you need to:
 
-Makes a Mixing available that will give you the methods:
-
- * is\_dirty()
- * get\_dirty\_fields()
-    
-
-Using the Mixin in the Model
-----------------------------
+- Inherit from ``DirtyFieldMixin`` in the Django model you want to track.
 
 ::
     
@@ -35,49 +43,34 @@ Using the Mixin in the Model
         """A simple test model to test dirty fields mixin with"""
         boolean = models.BooleanField(default=True)
         characters = models.CharField(blank=True, max_length=80)
-    
 
-Using it in the shell
----------------------
+- Use one of these 2 functions on a model instance to know if this instance is dirty, and get the dirty fields:
+
+    * is\_dirty()
+    * get\_dirty\_fields()
+
+
+Example
+-------
 
 ::
 
-    (ve)$ ./manage.py shell
-    >>> from testing_app.models import TestModel
-    >>> tm = TestModel(boolean=True,characters="testing")
-    >>> tm.save()
+    >>> from tests.models import TestModel
+    >>> tm = TestModel.objects.create(boolean=True,characters="testing")
     >>> tm.is_dirty()
     False
     >>> tm.get_dirty_fields()
     {}
+
     >>> tm.boolean = False
+
     >>> tm.is_dirty()
     True
     >>> tm.get_dirty_fields()
     {'boolean': True}
-    >>> tm.characters = "have changed"
-    >>> tm.is_dirty()
-    True
-    >>> tm.get_dirty_fields()
-    {'boolean': True, 'characters': 'testing'}
-    >>> tm.save()
-    >>> tm.is_dirty()
-    False
-    >>> tm.get_dirty_fields()
-    {}
-    >>> 
 
-Why would you want this?
-------------------------
 
-When using signals_, especially pre_save_, it is useful to be able to see what fields have changed or not. A signal could change its behaviour depending on whether a specific field has changed, whereas otherwise, you only could work on the event that the model's `save()` method had been called.
+Consult the `full documentation <http://django-dirtyfields.readthedocs.org/en/develop/>`_ for more informations.
 
-Credits
--------
 
-This code has largely be adapted from what was made available at `Stack Overflow`_.
-
-.. _Stack Overflow: http://stackoverflow.com/questions/110803/dirty-fields-in-django
-.. _signals: http://docs.djangoproject.com/en/1.2/topics/signals/
-.. _pre_save: http://docs.djangoproject.com/en/1.2/ref/signals/#django.db.models.signals.pre_save
 
